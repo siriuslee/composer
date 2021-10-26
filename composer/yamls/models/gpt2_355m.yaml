@@ -24,36 +24,36 @@ model:
     use_pretrained: false
     tokenizer_name: gpt2
     model_config:
-			activation_function: gelu_new
-			architectures:
-				- GPT2LMHeadModel
-			attn_pdrop: 0.1
-			bos_token_id: 50256
-			embd_pdrop: 0.1
-			eos_token_id: 50256
-			initializer_range: 0.02
-			layer_norm_epsilon: 1.0e-05
-			model_type: gpt2
-			n_ctx: 1024
-			n_embd: 1024
-			n_head: 16
-			n_inner: 4096
-			n_layer: 24
-			n_positions: 1024
-			resid_pdrop: 0.1
-			scale_attn_weights: true
-			summary_activation: null
-			summary_first_dropout: 0.1
-			summary_proj_to_labels: true
-			summary_type: cls_index
-			summary_use_proj: true
-			task_specific_params: 
-				text-generation:
-					do_sample: true
-					max_length: 50
-			transformers_version: 4.12.0.dev0
-			use_cache: true
-			vocab_size: 50257
+      activation_function: gelu_new
+      architectures:
+        - GPT2LMHeadModel
+      attn_pdrop: 0.1
+      bos_token_id: 50256
+      embd_pdrop: 0.1
+      eos_token_id: 50256
+      initializer_range: 0.02
+      layer_norm_epsilon: 1.0e-05
+      model_type: gpt2
+      n_ctx: 1024
+      n_embd: 1024
+      n_head: 16
+      n_inner: 4096
+      n_layer: 24
+      n_positions: 1024
+      resid_pdrop: 0.1
+      scale_attn_weights: true
+      summary_activation: null
+      summary_first_dropout: 0.1
+      summary_proj_to_labels: true
+      summary_type: cls_index
+      summary_use_proj: true
+      task_specific_params: 
+        text-generation:
+          do_sample: true
+          max_length: 50
+      transformers_version: 4.12.0.dev0
+      use_cache: true
+      vocab_size: 50257
 optimizer:
   adamw:
     lr: 3.0e-4
@@ -97,6 +97,6 @@ dataloader:
   prefetch_factor: 2
 precision: amp
 grad_clip_norm: 1.0
-grad_accum: 22
+grad_accum: 21
 validate_every_n_batches: 1000
 validate_every_n_epochs: 1
