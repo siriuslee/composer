@@ -4,16 +4,17 @@
 train_dataset:
   lm:
     split: train
-    datadir: /datasets/openwebtext_saved
+    datadir: /locakdisk/openwebtext_saved
     tokenizer_name: gpt2
     seed: 17
     shuffle: false
     drop_last: false
-    num_tokens: 7340032000 # 14000 (batches) * 512 (batch_size) * 1024 (seq_len)
+    # TODO: still have to decide this
+    num_tokens: 11534336000 # 22000 (batches) * 512 (batch_size) * 1024 (seq_len)
 val_dataset:
   lm:
     split: validation
-    datadir: /datasets/openwebtext_saved
+    datadir: /localdisk/openwebtext_saved
     tokenizer_name: gpt2
     seed: 17
     shuffle: false
@@ -56,23 +57,24 @@ model:
 			vocab_size: 50257
 optimizer:
   adamw:
-    lr: 3.0e-4
+    lr: 2.5e-4
     betas:
       - 0.9
-      - 0.999
+      - 0.95
     eps: 1.0e-08
     weight_decay: 0.0
+# TODO: still have to decide this
 schedulers:
   - warmup:
       warmup_method: linear
       warmup_factor: 0
       interval: step
-      warmup_iters: 140ba
+      warmup_iters: 220ba
   - cosine_decay:
       interval: step
       eta_min: 0
       verbose: false
-      T_max: 13860ba
+      T_max: 21780ba
 loggers:
   - file:
       log_level: batch
@@ -82,7 +84,8 @@ loggers:
       every_n_batches: 100
       every_n_epochs: 1
 max_epochs: 1
-total_batch_size: 512
+# TODO: decide these 
+total_batch_size: 512 
 eval_batch_size: 8 # use micro_bs_per_gpu = 1 to accomodate 10GB limit
 seed: 17
 device:
