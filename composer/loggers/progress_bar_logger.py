@@ -130,6 +130,7 @@ class ProgressBarLogger(LoggerDestination):
     ) -> None:
 
         self._show_pbar = progress_bar
+        self._filler_pbar: Optional[_ProgressBar] = None
         self.train_pbar: Optional[_ProgressBar] = None
         self.eval_pbar: Optional[_ProgressBar] = None
         self.is_train: Optional[bool] = None
@@ -201,6 +202,20 @@ class ProgressBarLogger(LoggerDestination):
             # write directly to self.stream; no active progress bar
             print(log_str, file=self.stream, flush=True)
 
+    def _make_filler_pbar(self) -> _ProgressBar:
+        filler = '***FILLER***'
+        return _ProgressBar(
+            file=self.stream,
+            total=None,
+            position=0,
+            keys_to_log=[],
+            bar_format=f'{filler}\r{" " * len(filler)}',
+            unit=TimeUnit.BATCH,
+            metrics={},
+            epoch_style=False,
+        )
+
+
     def _build_pbar(self, state: State, is_train: bool, epoch_style: bool = False) -> _ProgressBar:
         """Builds a pbar that tracks in the units of max_duration.
 
@@ -213,7 +228,7 @@ class ProgressBarLogger(LoggerDestination):
             Epoch     0 train 100%|█████████████████████████| 29/29
             Epoch     1 train 100%|█████████████████████████| 29/29
         """
-        position = 0 if is_train else 1
+        position = 1 if is_train else 2
         split = 'train' if is_train else 'val'
 
         assert self.is_train is not None
@@ -260,6 +275,7 @@ class ProgressBarLogger(LoggerDestination):
         assert state.max_duration is not None, 'max_duration should be set'
         epoch_style = state.max_duration.unit == TimeUnit.EPOCH
         if self.show_pbar and not self.train_pbar:
+            self._filler_pbar = self._make_filler_pbar()
             self.train_pbar = self._build_pbar(state=state, is_train=True, epoch_style=epoch_style)
 
     def eval_start(self, state: State, logger: Logger) -> None:
