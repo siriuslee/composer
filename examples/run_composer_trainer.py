@@ -13,6 +13,8 @@ Example that trains MNIST with label smoothing:
 
 import logging
 import os
+import signal
+import subprocess
 import sys
 import tempfile
 import warnings
@@ -21,6 +23,26 @@ from composer.loggers import LogLevel
 from composer.trainer.trainer_hparams import TrainerHparams
 from composer.utils import dist
 from composer.utils.misc import warning_on_one_line
+
+
+def sigterm_handler(_signo, _stack_frame):
+    print('******RECEIVED SIGTERM***********')
+    print('Checking /tmp')
+    out = subprocess.check_output(['ls', '-lahr', '/tmp'])
+    print(out)
+
+    if os.path.exists('/tmp/tombstone'):
+        print('** Found /tmp/tombstone!')
+    elif os.path.exists('/tmp/tombstone.bak'):
+        print('** Found backup tombstone! WTF?')
+    else:
+        print('***COULD NOT FIND TOMBSTONE AT ALL***')
+
+    # Raises SystemExit(0):
+    sys.exit(0)
+
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 
 def _main():
